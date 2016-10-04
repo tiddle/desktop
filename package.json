@@ -1,0 +1,21 @@
+{
+  "author": "Carlo Cruz",
+  "name": "desktoptv",
+  "description": "Desktop startup for raspberry PI",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "restify": "^4.1.1",
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "should": "latest"
+  },
+  "scripts": {
+    "start": "actionhero start",
+    "actionhero": "actionhero",
+    "test": "NODE_ENV=test mocha"
+  }
+}
