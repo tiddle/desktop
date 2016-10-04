@@ -1,11 +1,13 @@
 var restify = require('restify');
+var config = require('./config/default.config.js');
+console.log(config);
 
 function getForecast(req, res) {
   var client = restify.createClient({
     url: 'http://api.wunderground.com',
   });
 
-  client.get('/api/6374df36c9e7e429/forecast/q/zmw:00000.1.95864.json', function (err, request) {
+  client.get('/api/'+config.wunderground.api+'/forecast/q/'+config.wunderground.closestWeatherStation+'.json', function (err, request) {
     request.on('result', function (err, response) {
       console.log(err);
       response.body = '';
@@ -25,7 +27,7 @@ function getDirectionsForDulux(req, res) {
     url: 'https://maps.googleapis.com',
   });
 
-  client.get('', function (err, request) {
+  client.get('/maps/api/directions/json?origin='+config.google.from+'&destination='+config.google.to+'&traffic_modal=pessimistic&key='+config.google.api, function (err, request) {
    request.on('result', function(err, response) {
      console.log(err);
      response.body = '';
