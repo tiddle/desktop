@@ -1,4 +1,4 @@
-module.export = {
+var config = {
   wunderground: {
     api: 'YOUR API KEY HERE',
     closestWeatherStation: 'zmw:00000.1.95864'
@@ -9,3 +9,5 @@ module.export = {
     to: 'Traffic Report Too'
   }
 };
+
+module.exports = config;

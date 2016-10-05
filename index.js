@@ -1,15 +1,14 @@
 var restify = require('restify');
-var config = require('./config/default.config.js');
-console.log(config);
+var config = require('./config/my.config.js');
 
 function getForecast(req, res) {
   var client = restify.createClient({
     url: 'http://api.wunderground.com',
   });
 
-  client.get('/api/'+config.wunderground.api+'/forecast/q/'+config.wunderground.closestWeatherStation+'.json', function (err, request) {
+  var weatherUrl = '/api/'+config.wunderground.api+'/forecast/q/'+config.wunderground.closestWeatherStation+'.json';
+  client.get(weatherUrl, function (err, request) {
     request.on('result', function (err, response) {
-      console.log(err);
       response.body = '';
       response.on('data', function (chunk) {
         response.body += chunk;
@@ -27,9 +26,9 @@ function getDirectionsForDulux(req, res) {
     url: 'https://maps.googleapis.com',
   });
 
-  client.get('/maps/api/directions/json?origin='+config.google.from+'&destination='+config.google.to+'&traffic_modal=pessimistic&key='+config.google.api, function (err, request) {
+  var url = '/maps/api/directions/json?origin='+encodeURI(config.google.from)+'&destination='+encodeURI(config.google.to)+'&traffic_modal=pessimistic&key='+config.google.api;
+  client.get(url, function (err, request) {
    request.on('result', function(err, response) {
-     console.log(err);
      response.body = '';
      response.on('data', function(chunk) {
        response.body += chunk;
