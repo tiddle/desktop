@@ -7,15 +7,15 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "restify": "^4.1.1",
+    "node-fetch": "^1.6.3",
+    "restify": "^4.1.1"
   },
   "devDependencies": {
     "mocha": "latest",
+    "nodemon": "^1.10.2",
     "should": "latest"
   },
   "scripts": {
-    "start": "actionhero start",
-    "actionhero": "actionhero",
     "test": "NODE_ENV=test mocha"
   }
 }

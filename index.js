@@ -1,64 +1,29 @@
-var restify = require('restify');
 var config = require('./config/my.config.js');
+var restify = require('restify');
+var api = require ('./services/ApiService.js');
 
-function getForecast() {
-  var client = restify.createClient({
-    url: url
-  });
-
-  var weatherUrl = '/api/'+config.wunderground.api+'/forecast/q/'+config.wunderground.closestWeatherStation+'.json';
-  client.get(weatherUrl, function (err, request) {
-    request.on('result', function (err, response) {
-      response.body = '';
-      response.on('data', function (chunk) {
-        response.body += chunk;
-      });
-
-      response.on('end', function () {
-        res.send(JSON.parse(response.body));
-      });
-    });
-  });
+function getForecast(req, res) {
+  var weatherUrl = 'http://api.wunderground.com/api/'+config.wunderground.api+'/forecast/q/'+config.wunderground.closestWeatherStation+'.json';
+  return api.fetch(weatherUrl).then(function(weatherData) {
+    res.send(weatherData);
+    return weatherData;
+  })
 }
 
 function getForecast10day(req, res) {
-  var client = restify.createClient({
-    url: 'http://api.wunderground.com',
-  });
-
-  var weatherUrl = '/api/'+config.wunderground.api+'/forecast10day/q/'+config.wunderground.closestWeatherStation+'.json';
-  client.get(weatherUrl, function (err, request) {
-    request.on('result', function (err, response) {
-      response.body = '';
-      response.on('data', function (chunk) {
-        response.body += chunk;
-      });
-
-      response.on('end', function () {
-        res.send(JSON.parse(response.body));
-      });
-    });
+  var weatherUrl = 'http://api.wunderground.com/api/'+config.wunderground.api+'/forecast10day/q/'+config.wunderground.closestWeatherStation+'.json';
+  return api.fetch(weatherUrl).then(function(weatherData) {
+    res.send(weatherData);
+    return weatherData;
   });
 }
 
 function getDirectionsForDulux(req, res) {
-  var client = restify.createClient({
-    url: 'https://maps.googleapis.com',
+  var directionUrl = 'https://maps.googleapis.com/maps/api/directions/json?origin='+encodeURI(config.google.from)+'&destination='+encodeURI(config.google.to)+'&traffic_modal=pessimistic&key='+config.google.api;
+  return api.fetch(directionUrl).then(function(directionData) {
+    res.send(directionData);
+    return directionData;
   });
-
-  var url = '/maps/api/directions/json?origin='+encodeURI(config.google.from)+'&destination='+encodeURI(config.google.to)+'&traffic_modal=pessimistic&key='+config.google.api;
-  client.get(url, function (err, request) {
-   request.on('result', function(err, response) {
-     response.body = '';
-     response.on('data', function(chunk) {
-       response.body += chunk;
-     });
-
-     response.on('end', function() {
-       res.send(JSON.parse(response.body));
-     });
-   })
-  })
 }
 
 var server = restify.createServer();
@@ -66,6 +31,6 @@ server.get('/weather/10day', getForecast10day);
 server.get('/weather/forecast', getForecast);
 server.get('/directions/dulux', getDirectionsForDulux);
 
-server.listen(8080, function () {
+server.listen(8081, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
